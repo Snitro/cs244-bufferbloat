@@ -117,10 +117,10 @@ def start_iperf(net):
     # For those who are curious about the -w 16m parameter, it ensures
     # that the TCP flow is not receiver window limited.  If it is,
     # there is a chance that the router buffer may not get filled up.
-    server = h2.popen("iperf -s -w 16m")
+    h2.popen("iperf -s -w 16m") # server
     # TODO: Start the iperf client on h1.  Ensure that you create a
     # long lived TCP flow. You may need to redirect iperf's stdout to avoid blocking.
-    client = h1.popen("iperf -c %s -t %d > %s/iperf_client.txt" % (h2.IP(), args.time + 5, args.dir))
+    h1.popen("iperf -c %s -t %d > %s/iperf_client.txt" % (h2.IP(), args.time, args.dir)) # client
 
 def start_webserver(net):
     print("Starting webserver...")
@@ -139,6 +139,18 @@ def page_fatcher(net):
 
     while True:                                              
         print("%.1fs left..." % (args.time - (time() - start_time)))
+
+        fetch = h2.popen("curl -o /dev/null -s -w %{} {}/index.html".format("{time_total}", h1.IP()))
+        fetch.wait()
+        fetch_times.append(float(fetch.communicate()[0]))
+
+        sleep(2)
+
+        fetch = h2.popen("curl -o /dev/null -s -w %{} {}/index.html".format("{time_total}", h1.IP()))
+        fetch.wait()
+        fetch_times.append(float(fetch.communicate()[0]))
+
+        sleep(2)
 
         fetch = h2.popen("curl -o /dev/null -s -w %{} {}/index.html".format("{time_total}", h1.IP()))
         fetch.wait()
@@ -168,7 +180,7 @@ def start_ping(net):
     h1 = net.get('h1')
     h2 = net.get('h2')
 
-    popen = h1.popen("ping -i 0.1 %s > %s/ping.txt"%(h2.IP(), args.dir), shell=True)
+    h1.popen("ping -i 0.1 %s > %s/ping.txt"%(h2.IP(), args.dir), shell=True)
 
 def bufferbloat():
     if not os.path.exists(args.dir):
@@ -199,8 +211,8 @@ def bufferbloat():
     qmon = start_qmon(iface='s0-eth2', outfile='%s/q.txt' % (args.dir)) # 监控队列长度，这里添加了两个链路，所以是eth2
 
     # TODO: Start iperf, webservers, etc.
-    start_iperf(net) # 使用 iperf 从 h1 向 h2 发送数据
     start_webserver(net) # 启动 web 服务器
+    start_iperf(net) # 使用 iperf 从 h1 向 h2 发送数据
 
     # Hint: The command below invokes a CLI which you can use to
     # debug.  It allows you to run arbitrary commands inside your
