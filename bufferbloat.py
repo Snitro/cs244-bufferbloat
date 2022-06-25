@@ -144,13 +144,13 @@ def page_fatcher(net):
         fetch.wait()
         fetch_times.append(float(fetch.communicate()[0]))
 
-        sleep(2)
+        sleep(1.6)
 
         fetch = h2.popen("curl -o /dev/null -s -w %{} {}/index.html".format("{time_total}", h1.IP()))
         fetch.wait()
         fetch_times.append(float(fetch.communicate()[0]))
 
-        sleep(2)
+        sleep(1.6)
 
         fetch = h2.popen("curl -o /dev/null -s -w %{} {}/index.html".format("{time_total}", h1.IP()))
         fetch.wait()
