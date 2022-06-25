@@ -1,0 +1,42 @@
+<!--
+ * @Author: Snitro
+ * @Date: 2022-06-25 18:42:36
+ * @LastEditors: Snitro
+ * @LastEditTime: 2022-06-25 18:51:18
+ * @Description: file content
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			html, body {
+				height: 100%;
+			}
+
+			img.dyn {
+				height: 50%;
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<table style="width:100%">
+			<tr>
+				<th>BBR-BB-Q20</th>
+				<th>BBR-BB-Q100</th>
+			</tr>
+			<tr>
+				<td><img class="dyn" src="./bbr-bb-q20/rtt.png" alt="RTT trend" ></td>
+				<td><img class="dyn" src="./bbr-bb-q100/rtt.png" alt="RTT trend" ></td>
+			</tr>
+			<tr>
+				<td><img class="dyn" src="./bbr-bb-q20/q.png" alt="Queue trend" ></td>
+				<td><img class="dyn" src="./bbr-bb-q100/q.png" alt="Queue trend" ></td>
+			</tr>
+			<tr>
+				<td><img class="dyn" src="./bbr-bb-q20/cwnd-iperf.png" alt="Cwnd trend" ></td>
+				<td><img class="dyn" src="./bbr-bb-q100/cwnd-iperf.png" alt="Cwnd trend" ></td>
+			</tr>
+		</table> 
+	</body>
+</html>
