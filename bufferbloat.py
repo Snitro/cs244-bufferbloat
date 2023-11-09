@@ -90,16 +90,6 @@ class BBTopo(Topo):
 # contribute neatly written (using classes) monitoring scripts for
 # Mininet!
 
-# tcp_probe is a kernel module which records cwnd over time. In linux >= 4.16
-# it has been replaced by the tcp:tcp_probe kernel tracepoint.
-def start_tcpprobe(outfile="cwnd.txt"):
-    os.system("rmmod tcp_probe; modprobe tcp_probe full=1;")
-    Popen("cat /proc/net/tcpprobe > %s/%s" % (args.dir, outfile),
-          shell=True)
-
-def stop_tcpprobe():
-    Popen("killall -9 cat", shell=True).wait()
-
 def start_qmon(iface, interval_sec=0.1, outfile="q.txt"):
     monitor = Process(target=monitor_qlen, args=(iface, interval_sec, outfile))
     monitor.start()
@@ -200,7 +190,6 @@ def bufferbloat():
     net.pingAll() #简单测试网络是否配置成功
 
     # Start all the monitoring processes
-    start_tcpprobe("cwnd.txt") # 通过 tcp_probe 探测 cwnd 的变化情况
     start_ping(net)            # 以 0.1 秒为间隔 ping
 
     # TODO: Start monitoring the queue sizes.  Since the switch I
@@ -236,7 +225,6 @@ def bufferbloat():
     print("Standard deviation of fetch times: %f\n" % numpy.std(fetch_times))
 
 
-    stop_tcpprobe()
     if qmon is not None:
         qmon.terminate()
     net.stop()

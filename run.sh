@@ -12,7 +12,6 @@ delay=2
 
 iperf_port=5001
 
-modprobe tcp_probe
 # make sure we don't use a cached cwnd
 sysctl -w net.ipv4.tcp_no_metrics_save=1
 # make sure the local socket buffers don't become the bottleneck
